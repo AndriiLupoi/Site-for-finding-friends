@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style2.css">
+</head>
+
+<body>
+    <header>
+        <div class="head">
+            <img src="/photo.jpg" alt="photo">
+            <span>Your Name</span>
+            <button id="logout-button" class="logout">LogOut</button>
+        </div>
+    </header>
+    <main>
+        <div id="manipulate" class="manipulate">
+            <input type="text" id="searchInput" placeholder="Search by name...">
+            <div class="sort-block">
+              <h3>Sort By Name</h3>
+              <div class="sort-buttons">
+                <button id="sortByNameAsc" class="sort-button" data-sort="nameAsc">
+                  <img src="/2.png" alt="" width="30px">
+                </button>
+                <button id="sortByNameDesc" class="sort-button" data-sort="nameDesc">
+                  <img src="/1.png" alt="" width="30px">
+                </button>
+              </div>
+            </div>
+            <div class="sort-block">
+              <h3>Sort By Age</h3>
+              <div class="sort-buttons">
+                <button id="sortByAgeAsc" class="sort-button" data-sort="ageAsc">
+                  <img src="/2.png" alt="" width="30px">
+                </button>
+                <button id="sortByAgeDesc" class="sort-button" data-sort="ageDesc">
+                  <img src="/1.png" alt="" width="30px">
+                </button>
+              </div>
+            </div>
+            <div class="filter-block">
+              <h3>Filter</h3>
+              <div class="filter-options">
+                <label for="filterAge">Age:</label>
+                <input type="number" id="filterAge" placeholder="Enter age...">
+                
+                <label for="filterName">Name:</label>
+                <input type="text" id="filterName" placeholder="Enter name...">
+          
+                <label for="filterLocation">Location:</label>
+                <input type="text" id="filterLocation" placeholder="Enter location...">
+          
+                <label for="filterEmail">Email:</label>
+                <input type="text" id="filterEmail" placeholder="Enter email...">
+                
+                <button id="applyFilters" class="apply-filters">Apply Filters</button>
+                <button id="resetFilters" class="reset-filters">Reset Filters</button>
+              </div>
+            </div>
+          </div>
+          
+          
+
+        <div id="user-cards-container" class="user-cards-container"></div>
+    </main>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="script2.js"></script>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="form-container">
+    <div class="tab-buttons">
+      <button id="tab-reg" class="tab-button button-yellow" onclick="openTab('register')">Register</button>
+      <button id="tab-log" class="tab-button button-yellow" onclick="openTab('login')">Login</button>
+    </div>
+    <form id="register" class="form" action="/index2.html" method="POST">
+      <label>
+        <span class="input-title">Username</span>
+        <div class="input-info">
+          <input class="input" type="text" name="name" id="username" placeholder="Enter username" required autofocus>
+          <div class="error" id="error-username"></div>
+        </div>
+      </label>
+      <label>
+        <span class="input-title">E-mail:</span>
+        <div class="input-info">
+          <input class="input" type="email" name="email" id="reg-email" placeholder="example@gmail.com" required>
+          <div class="error" id="error-reg-email"></div>
+        </div>
+      </label>
+      <label>
+        <span class="input-title">Password:</span>
+        <div class="input-info">
+          <input class="input" type="password" id="reg-password" name="password" required>
+          <div class="error" id="error-reg-password"></div>
+        </div>
+      </label>
+      <label>
+        <span class="input-title">Repeat password:</span>
+        <div class="input-info">
+          <input class="input" type="password" id="reg-rep-password" name="rep-password" required>
+          <div class="error" id="error-reg-rep-password"></div>
+        </div>
+      </label>
+      <center>
+        <button id="reg-submit" class="button button-yellow" type="submit">Register</button>
+      </center>
+    </form>
+    <form id="login" class="form" action="/index2.html" method="POST">
+      <label>
+        <span class="input-title">E-mail:</span>
+        <div class="input-info">
+          <input class="input" type="email" name="email" id="log-email" placeholder="example@gmail.com" required>
+          <div class="error" id="error-log-email"></div>
+        </div>
+      </label>
+      <label>
+        <span class="input-title">Password:</span>
+        <div class="input-info">
+          <input class="input" type="password" id="log-password" name="password" required>
+          <div class="error" id="error-log-password"></div>
+        </div>
+      </label>
+      <button id="log-submit" class="button button-yellow" type="submit">Login</button>
+    </form>
+  </div>
+  <center>
+    <div id="loader" class="hidden">Sending progress...</div>
+  </center>
+    <div id="user-cards-container" class="user-cards-container"></div>
+  <script src="script.js"></script>
+</body>
+</html>
