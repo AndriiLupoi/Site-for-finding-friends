@@ -1,4 +1,4 @@
-// Задаємо початкові значення та отримуємо посилання на елементи сторінки
+document.addEventListener('DOMContentLoaded', function() {// Задаємо початкові значення та отримуємо посилання на елементи сторінки
 const userCardsContainer = document.getElementById('user-cards-container');
 const logoutButton = document.getElementById('logout-button');
 const searchInput = document.getElementById('searchInput');
@@ -69,11 +69,9 @@ function fetchInformation(url) {
       usersData = data.results;
       originalUsersData = [...usersData]; // Зберігаємо оригінальні дані
       displayUsers(usersData);
-      loadingIndicator.style.display = 'none';
     })
     .catch(error => {
       console.error('Error fetching data:', error);
-      loadingIndicator.style.display = 'none';
     });
 }
 
@@ -238,4 +236,4 @@ showMoreButton.addEventListener('click', loadMoreUsers);
 
 // Завантаження даних після завантаження сторінки
 fetchInformation(apiUrl);
-
+});
