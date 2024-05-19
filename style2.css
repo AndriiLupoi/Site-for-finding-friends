@@ -275,19 +275,6 @@ main {
   #manipulate, .user-cards-container {
     width: 100%;
   }
-
-  header .logout {
-    position: absolute;
-    top: auto;
-    right: 0;
-    margin-right: 10px;
-    width: 100%;
-    max-width: 120px;
-    margin-top: 10px;
-  }
-}
-
-@media (max-width: 600px) {
   body, html {
     display: block;
     overflow-x: hidden;
