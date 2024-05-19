@@ -15,7 +15,6 @@ const resetFiltersButton = document.getElementById('resetFilters');
 let debounceTimer;
 let usersData = [];
 let currentPage = 1;
-const pageSize = 12;
 
 
 function createUserCard(user) {
@@ -49,32 +48,38 @@ function displayUsers(users) {
 
 let originalUsersData = [];
 
-function fetchUsers() {
-  $.ajax({
-    url: `https://randomuser.me/api/?results=${pageSize}&page=${currentPage}`,
-    dataType: 'json',
-    success: function(data) {
-      originalUsersData = [...originalUsersData, ...data.results];
-      displayUsers(originalUsersData);
-      currentPage++;
-    },
-    error: function(jqXHR, textStatus, errorThrown) {
-      console.error('Error fetching data:', textStatus, errorThrown);
+async function fetchNextUsers() {
+  const loadingIndicator = document.getElementById('loading-indicator');
+  loadingIndicator.style.display = 'block';
+
+  try {
+    const response = await fetch(`https://randomuser.me/api/?results=6&page=${currentPage}`, {
+      credentials: 'omit'
+    });
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
     }
-  });
-}
-
-// Function to handle infinite scrolling
-function handleInfiniteScroll() {
-  const scrollHeight = userCardsContainer.scrollHeight;
-  const scrollTop = userCardsContainer.scrollTop;
-  const clientHeight = userCardsContainer.clientHeight;
-
-  if (scrollTop + clientHeight >= scrollHeight) {
-    fetchUsers(); // fetch the next batch of users when the user reaches the bottom of the container
+    const data = await response.json();
+    originalUsersData = [...originalUsersData, ...data.results];
+    displayUsers(originalUsersData);
+    currentPage++;
+  } catch (error) {
+    console.error('Error fetching data:', error.message);
+  } finally {
+    loadingIndicator.style.display = 'none';
   }
 }
 
+
+function handleInfiniteScroll() {
+  const scrollHeight = document.documentElement.scrollHeight;
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+  const clientHeight = document.documentElement.clientHeight;
+
+  if (scrollTop + clientHeight >= scrollHeight) {
+    fetchNextUsers(); // Завантажуємо наступну партію користувачів, коли користувач дійде до кінця сторінки
+  }
+}
 
 
 // Function to handle logout
@@ -305,4 +310,4 @@ applyFiltersButton.addEventListener('click', applyFilters);
 resetFiltersButton.addEventListener('click', resetFilters);
 userCardsContainer.addEventListener('scroll', handleInfiniteScroll);
 
-fetchUsers();
+fetchNextUsers();

@@ -7,7 +7,6 @@ body, html {
   color: #333;
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 header {
@@ -77,7 +76,6 @@ main {
   width: 70%;
   padding: 20px;
   background-color: #ecf0f1;
-  overflow-y: auto;
 }
 
 .user-card {
@@ -267,7 +265,7 @@ main {
   background-color: #0077A3;
 }
 
-@media (max-width: 600px) {
+@media (max-width: 760px) {
   main {
     flex-direction: column;
   }
@@ -320,6 +318,6 @@ main {
   }
 
   .user-card {
-    width: 90.5%;
+    width: 63.5%;
   }
 }
