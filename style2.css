@@ -267,7 +267,7 @@ main {
   background-color: #0077A3;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   main {
     flex-direction: column;
   }
