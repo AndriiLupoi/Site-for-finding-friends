@@ -265,6 +265,17 @@ main {
   background-color: #0077A3;
 }
 
+.show-more-button{
+  width: 130px;
+  background-color: #34495e;
+  border-radius: 20px;
+  height: 40px;
+  color: white;
+}
+.show-more-button:hover{
+  background-color: #1b2a3a;
+}
+
 @media (max-width: 760px) {
   main {
     flex-direction: column;

@@ -1,3 +1,4 @@
+// Задаємо початкові значення та отримуємо посилання на елементи сторінки
 const userCardsContainer = document.getElementById('user-cards-container');
 const logoutButton = document.getElementById('logout-button');
 const searchInput = document.getElementById('searchInput');
@@ -11,31 +12,16 @@ const filterLocationInput = document.getElementById('filterLocation');
 const filterEmailInput = document.getElementById('filterEmail');
 const applyFiltersButton = document.getElementById('applyFilters');
 const resetFiltersButton = document.getElementById('resetFilters');
+const loadingIndicator = document.getElementById('loading-indicator');
+const showMoreButton = document.createElement('button');
 
 let debounceTimer;
 let usersData = [];
+let originalUsersData = []; // Зберігаємо оригінальні дані
 let currentPage = 1;
+const resultsPerPage = 12;
+const apiUrl = `https://randomuser.me/api/?results=${resultsPerPage}`;
 
-
-function createUserCard(user) {
-  const gender = user.gender.charAt(0).toUpperCase() + user.gender.slice(1);
-  const userCard = document.createElement('div');
-  userCard.className = 'user-card';
-  userCard.innerHTML = `
-    <div class="user-card-header">
-      <h2 class="username ${user.gender}">${user.name.first} ${user.name.last}</h2>
-      <img src="${user.picture.large}" alt="${user.name.first} ${user.name.last}">
-    </div>
-    <div class="user-card-body">
-      <p>Age: ${user.dob.age}</p>
-      <p>Email: ${user.email}</p>
-      <p>Phone: ${user.phone}</p>
-      <p>Location: ${user.location.city}, ${user.location.country}</p>
-      <p class="gender ${user.gender}">${gender}</p>
-    </div>
-  `;
-  return userCard;
-}
 
 function displayUsers(users) {
   userCardsContainer.innerHTML = '';
@@ -44,63 +30,72 @@ function displayUsers(users) {
     userCardsContainer.appendChild(userCard);
   });
   usersData = [...users];
+
+  showMoreButton.innerText = 'Показати ще';
+  showMoreButton.classList.add('show-more-button');
+  userCardsContainer.appendChild(showMoreButton);
 }
 
-let originalUsersData = [];
+// Функція для створення картки користувача
+function createUserCard(user) {
+  var dateOfBirth = new Date(user.dob.date);
+  var ageDate = new Date(Date.now() - dateOfBirth.getTime());
+  var age = Math.abs(ageDate.getUTCFullYear() - 1970);
 
-async function fetchNextUsers() {
-  const loadingIndicator = document.getElementById('loading-indicator');
-  loadingIndicator.style.display = 'block';
+  const gender = user.gender.charAt(0).toUpperCase() + user.gender.slice(1);
+  const userCard = document.createElement('div');
+  userCard.classList.add('user-card');
+  userCard.innerHTML = `
+      <div class="user-card-header">
+          <h2 class="username ${user.gender}">${user.name.first} ${user.name.last}</h2>
+          <img src="${user.picture.large}" alt="${user.name.first} ${user.name.last}">
+      </div>
+      <div class="user-card-body">
+          <p>Age: ${age}</p>
+          <p>Email: ${user.email}</p>
+          <p>Phone: ${user.phone}</p>
+          <p>Location: ${user.location.city}, ${user.location.country}</p>
+          <p class="gender ${user.gender}">${gender}</p>
+      </div>
+  `;
+  return userCard;
+}
 
-  try {
-    const response = await fetch(`https://randomuser.me/api/?results=6&page=${currentPage}`, {
-      credentials: 'omit'
+// Функція для завантаження даних з сервера
+function fetchInformation(url) {
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      usersData = data.results;
+      originalUsersData = [...usersData]; // Зберігаємо оригінальні дані
+      displayUsers(usersData);
+      loadingIndicator.style.display = 'none';
+    })
+    .catch(error => {
+      console.error('Error fetching data:', error);
+      loadingIndicator.style.display = 'none';
     });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    originalUsersData = [...originalUsersData, ...data.results];
-    displayUsers(originalUsersData);
-    currentPage++;
-  } catch (error) {
-    console.error('Error fetching data:', error.message);
-  } finally {
-    loadingIndicator.style.display = 'none';
-  }
 }
 
-
-function handleInfiniteScroll() {
-  const scrollHeight = document.documentElement.scrollHeight;
-  const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-  const clientHeight = document.documentElement.clientHeight;
-
-  if (scrollTop + clientHeight >= scrollHeight) {
-    fetchNextUsers(); // Завантажуємо наступну партію користувачів, коли користувач дійде до кінця сторінки
-  }
-}
-
-
-// Function to handle logout
+// Функція для обробки виходу користувача
 async function handleLogout(event) {
   event.preventDefault();
 
   await sendLogoutRequest()
-    .then((response) => {
+    .then(response => {
       console.log(response);
-      window.location.href = 'index.html'; // Change 'index.html' to your actual login page URL
+      window.location.href = 'index.html'; // Змініть 'index.html' на вашу фактичну сторінку входу
     })
-    .catch((error) => {
-      console.log(error);
+    .catch(error => {
+      console.error('Logout failed:', error);
     });
 
   setTimeout(toggleLoader, 1);
 }
 
-// Function to send logout request
+// Функція для відправлення запиту на вихід
 async function sendLogoutRequest() {
-  // Simulating a server request for the logout process
+  // Симулюємо запит на сервері для процесу виходу
   return new Promise((resolve, reject) => {
     let isSuccess = Math.floor(Math.random() * 2);
     setTimeout(() => {
@@ -113,7 +108,7 @@ async function sendLogoutRequest() {
   });
 }
 
-// Function to handle search
+// Функція для обробки пошуку
 function handleSearch() {
   clearTimeout(debounceTimer);
   debounceTimer = setTimeout(() => {
@@ -132,6 +127,7 @@ function handleSearch() {
   }, 300);
 }
 
+// Функції для сортування за ім'ям
 function sortUsersByName(order) {
   const sortedCards = usersData.sort((a, b) => {
     const nameA = `${a.name.first} ${a.name.last}`.toUpperCase();
@@ -147,6 +143,7 @@ function sortUsersByName(order) {
   displayUsers(sortedCards);
 }
 
+// Функції для сортування за віком
 function sortUsersByAge(order) {
   const sortedCards = usersData.sort((a, b) => {
     if (order === 'asc') {
@@ -159,6 +156,7 @@ function sortUsersByAge(order) {
   displayUsers(sortedCards);
 }
 
+// Функція для застосування фільтрів
 function applyFilters() {
   let filteredUsers = [...usersData];
 
@@ -167,19 +165,16 @@ function applyFilters() {
   const filterLocation = filterLocationInput.value.toLowerCase().trim();
   const filterEmail = filterEmailInput.value.toLowerCase().trim();
 
-
   if (!isNaN(filterAge)) {
     filteredUsers = filteredUsers.filter(user => user.dob.age === filterAge);
   }
 
-  
   if (filterName !== '') {
     filteredUsers = filteredUsers.filter(user => {
       const fullName = `${user.name.first.toLowerCase()} ${user.name.last.toLowerCase()}`;
       return fullName.includes(filterName);
     });
   }
-
 
   if (filterLocation !== '') {
     filteredUsers = filteredUsers.filter(user => {
@@ -195,119 +190,52 @@ function applyFilters() {
   displayUsers(filteredUsers);
 }
 
+// Функція для скидання фільтрів
 function resetFilters() {
   filterAgeInput.value = '';
   filterNameInput.value = '';
   filterLocationInput.value = '';
   filterEmailInput.value = '';
 
-  usersData = [...originalUsersData];
-
+  usersData = [...originalUsersData]; // Повертаємо до початкових даних
   displayUsers(usersData);
 }
 
-function updateQueryString(params) {
-  const url = new URL(window.location.href);
-  url.search = new URLSearchParams(params).toString();
-  window.history.pushState({}, '', url.href);
-}
+function loadMoreUsers() {
+  currentPage++;
+  const nextPageUrl = `https://randomuser.me/api/?results=${resultsPerPage}&page=${currentPage}`;
 
+  fetch(nextPageUrl)
+    .then(response => response.json())
+    .then(data => {
+      const newUsers = data.results;
+      usersData = [...usersData, ...newUsers];
+      displayUsers(usersData);
 
-function getQueryStringParams() {
-  const url = new URL(window.location.href);
-  return Object.fromEntries(url.searchParams.entries());
-}
-
-
-const queryParams = getQueryStringParams();
-if (queryParams.search) {
-  searchInput.value = queryParams.search;
-  handleSearch();
-}
-if (queryParams.sortBy) {
-  if (queryParams.sortBy === 'name') {
-    if (queryParams.order === 'asc') {
-      sortUsersByName('asc');
-    } else {
-      sortUsersByName('desc');
+      // Перевіряємо, чи є ще користувачі для завантаження
+      if (newUsers.length === resultsPerPage) {
+        showMoreButton.style.display = 'block';
+      } else {        
+        showMoreButton.style.display = 'none';
     }
-  } else if (queryParams.sortBy === 'age') {
-    if (queryParams.order === 'asc') {
-      sortUsersByAge('asc');
-    } else {
-      sortUsersByAge('desc');
-    }
-  }
-}
-if (queryParams.filterAge) {
-  filterAgeInput.value = queryParams.filterAge;
-}
-if (queryParams.filterName) {
-  filterNameInput.value = queryParams.filterName;
-}
-if (queryParams.filterLocation) {
-  filterLocationInput.value = queryParams.filterLocation;
-}
-if (queryParams.filterEmail) {
-  filterEmailInput.value = queryParams.filterEmail;
+  })
+  .catch(error => {
+    console.error('Error loading more users:', error);
+  });
 }
 
 
-searchInput.addEventListener('input', () => {
-  updateQueryString({ search: searchInput.value.trim() });
-});
-
-sortByNameAscButton.addEventListener('click', () => {
-  updateQueryString({ sortBy: 'name', order: 'asc' });
-  sortUsersByName('asc');
-});
-
-sortByNameDescButton.addEventListener('click', () => {
-  updateQueryString({ sortBy: 'name', order: 'desc' });
-  sortUsersByName('desc');
-});
-
-sortByAgeAscButton.addEventListener('click', () => {
-  updateQueryString({ sortBy: 'age', order: 'asc' });
-  sortUsersByAge('asc');
-});
-
-sortByAgeDescButton.addEventListener('click', () => {
-  updateQueryString({ sortBy: 'age', order: 'desc' });
-  sortUsersByAge('desc');
-});
-
-applyFiltersButton.addEventListener('click', () => {
-  const params = {};
-  if (filterAgeInput.value.trim() !== '') {
-    params.filterAge = filterAgeInput.value.trim();
-  }
-  if (filterNameInput.value.trim() !== '') {
-    params.filterName = filterNameInput.value.trim();
-  }
-  if (filterLocationInput.value.trim() !== '') {
-    params.filterLocation = filterLocationInput.value.trim();
-  }
-  if (filterEmailInput.value.trim() !== '') {
-    params.filterEmail = filterEmailInput.value.trim();
-  }
-  updateQueryString(params);
-  applyFilters();
-});
-
-resetFiltersButton.addEventListener('click', () => {
-  updateQueryString({});
-  resetFilters();
-});
-
-logoutButton.addEventListener('click', handleLogout);
-searchInput.addEventListener('input', handleSearch);
+// Обробники подій для кнопок сортування, фільтрації, показу додаткових користувачів та ін.
 sortByNameAscButton.addEventListener('click', () => sortUsersByName('asc'));
 sortByNameDescButton.addEventListener('click', () => sortUsersByName('desc'));
 sortByAgeAscButton.addEventListener('click', () => sortUsersByAge('asc'));
 sortByAgeDescButton.addEventListener('click', () => sortUsersByAge('desc'));
 applyFiltersButton.addEventListener('click', applyFilters);
 resetFiltersButton.addEventListener('click', resetFilters);
-userCardsContainer.addEventListener('scroll', handleInfiniteScroll);
+logoutButton.addEventListener('click', handleLogout);
+searchInput.addEventListener('input', handleSearch);
+showMoreButton.addEventListener('click', loadMoreUsers);
 
-fetchNextUsers();
+// Завантаження даних після завантаження сторінки
+fetchInformation(apiUrl);
+

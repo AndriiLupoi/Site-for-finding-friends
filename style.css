@@ -3,74 +3,13 @@
   padding: 0;
   box-sizing: border-box;
 }
-.form-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-  max-width: 720px;
-  border: solid black 5px;
-  padding: 20px;
-  padding-right: 40px;
-  background-color: #312d2d;
-  border-radius: 20px;
-}
-
-.form {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.input-title {
-  display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-}
-
-.input-info {
-  position: relative;
-}
-
-.input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-}
-
-.error {
-  position: absolute;
-  bottom: -18px;
-  left: 0;
-  font-size: 12px;
-  color: red;
-}
-
-.button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  border-radius: 5px;
-  background-color: #ffd000;
-  color: #000;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  align-items: center;
-  
-}
-
-.button:hover {
-  background-color: #FFC107;
-}
 
 body {
   min-height: 100vh;
   padding: 50px;
   display: flex;
-  flex-direction: row;
-  background-color: #848282;
+  flex-direction: column;
+  background-color: #18191c;
   color: #FFFFFF;
   font-family: "Roboto", sans-serif;
   font-size: 18px;
@@ -87,7 +26,6 @@ form.active {
 label {
   display: flex;
   align-items: center;
-  float: left;
   justify-content: space-between;
   margin-bottom: 25px;
 }
@@ -98,12 +36,10 @@ label {
   font-size: 24px;
   font-weight: 500;
   line-height: 1;
-  margin-left: 28px;
 }
 
 .input, .button, .select, .checkbox-wrapper, .file-selector {
   width: 350px;
-  margin-left: 10px;
 }
 
 .input {
@@ -147,17 +83,15 @@ label {
   min-width: 210px;
   border: 2px solid transparent;
   border-radius: 6px;
+  margin-left: auto;
   padding: 9px 15px;
   color: #000000;
   font-size: 18px;
   font-weight: 300;
   font-family: inherit;
   transition: background-color 0.2s linear;
-  align-items: center;
 }
-#log-submit{
-  margin-left: 160px;
-}
+
 .button:hover {
   background-color: #FFFFFF;
   cursor: pointer;
@@ -175,8 +109,7 @@ label {
 }
 
 .button-yellow {
-  background-color: #ffd000;
-  align-items: center;
+  background-color: #FFD829;
 }
 
 .button:disabled {
@@ -191,26 +124,26 @@ label {
 #loader {
   width: 350px;
   margin-top: 25px;
+  margin-left: auto;
   text-align: center;
 }
 
 .tab-buttons {
   display: flex;
-  align-items: center;
-  margin: 10px 20px 40px 20px;
-
+  width: 250px;
 }
 
 .tab-buttons > button {
-  width: 300px;
-  height: 45px;
+  width: 120px;
+  height: 35px;
   display: block;
   border: 2px solid transparent;
   border-radius: 6px;
-  margin-left: 20px;
+  margin-left: auto;
+  margin-bottom: 5px;
+  padding: 9px 15px;
   color: #000000;
-  font-size: 30px;
-  font-weight: 900;
+  font-weight: 500;
   font-family: inherit;
   transition: background-color 0.2s linear;
 }
@@ -230,8 +163,6 @@ label {
   border: 2px solid #ffffff;
   outline: none;
 }
-
-
 
 @media (max-width: 768px) {
   body {
