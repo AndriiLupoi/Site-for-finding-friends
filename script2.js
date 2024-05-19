@@ -40,7 +40,7 @@ function displayUsers(users) {
 function createUserCard(user) {
   var dateOfBirth = new Date(user.dob.date);
   var ageDate = new Date(Date.now() - dateOfBirth.getTime());
-  var age = Math.abs(ageDate.getUTCFullYear() - 1970);
+  var age = Math.abs(ageDate.getUTCFullYear() - 1980);
 
   const gender = user.gender.charAt(0).toUpperCase() + user.gender.slice(1);
   const userCard = document.createElement('div');
