@@ -13,13 +13,13 @@ const applyFiltersButton = document.getElementById('applyFilters');
 const resetFiltersButton = document.getElementById('resetFilters');
 
 let debounceTimer;
-let usersData = []; // Store user data globally
+let usersData = [];
 let currentPage = 1;
 const pageSize = 12;
 
-// Function to create user card
+
 function createUserCard(user) {
-  const gender = user.gender.charAt(0).toUpperCase() + user.gender.slice(1); // Capitalize the first letter of the gender
+  const gender = user.gender.charAt(0).toUpperCase() + user.gender.slice(1);
   const userCard = document.createElement('div');
   userCard.className = 'user-card';
   userCard.innerHTML = `
@@ -38,27 +38,25 @@ function createUserCard(user) {
   return userCard;
 }
 
-// Function to display users
 function displayUsers(users) {
   userCardsContainer.innerHTML = '';
   users.forEach(user => {
     const userCard = createUserCard(user);
     userCardsContainer.appendChild(userCard);
   });
-  usersData = [...users]; // Update global user data array
+  usersData = [...users];
 }
 
 let originalUsersData = [];
 
-// Fetch users from Random User API
 function fetchUsers() {
   $.ajax({
     url: `https://randomuser.me/api/?results=${pageSize}&page=${currentPage}`,
     dataType: 'json',
     success: function(data) {
-      originalUsersData = [...originalUsersData, ...data.results]; // append new users to the original array
+      originalUsersData = [...originalUsersData, ...data.results];
       displayUsers(originalUsersData);
-      currentPage++; // increment the current page
+      currentPage++;
     },
     error: function(jqXHR, textStatus, errorThrown) {
       console.error('Error fetching data:', textStatus, errorThrown);
